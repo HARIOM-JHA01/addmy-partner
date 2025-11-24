@@ -6,7 +6,7 @@ import ErrorMessage from "../components/ErrorMessage";
 import Modal from "../components/Modal";
 import api from "../services/api";
 import type { Package } from "../types";
-
+import webApp from "@twa-dev/sdk";
 const PackagesPage = () => {
   const [packages, setPackages] = useState<Package[]>([]);
   const [loading, setLoading] = useState(true);
@@ -86,10 +86,15 @@ const PackagesPage = () => {
       });
 
       if (response.data.success) {
-        alert("Payment submitted successfully! Waiting for admin approval.");
+        webApp.showAlert(
+          "Payment submitted successfully! Waiting for admin approval."
+        );
         setPurchaseModal(false);
         setTransactionId("");
         setWalletAddress("");
+        setTimeout(() => {
+          navigate("/partner/dashboard");
+        }, 3000);
       }
     } catch (err: any) {
       alert(err.response?.data?.message || "Failed to submit payment");
@@ -348,91 +353,233 @@ const PackagesPage = () => {
         title="Purchase Package"
       >
         {!selectedPackage ? (
-          <div className="space-y-4">
-            <p className="text-gray-700">Preparing purchase details...</p>
-            <div className="flex justify-end">
+          <div className="space-y-4 text-center">
+            <div className="w-16 h-16 bg-linear-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto animate-pulse">
+              <svg
+                className="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+              </svg>
+            </div>
+            <p className="text-gray-700 font-medium">
+              Preparing purchase details...
+            </p>
+            <div className="flex justify-center">
               <button
                 onClick={() => setPurchaseModal(false)}
-                className="px-4 py-2 bg-gray-200 rounded-md text-gray-700 hover:bg-gray-300"
+                className="px-6 py-2 bg-gray-200 rounded-xl text-gray-700 hover:bg-gray-300 transition-all duration-200"
               >
                 Close
               </button>
             </div>
           </div>
         ) : (
-          <form onSubmit={handlePurchase} className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-gray-900 mb-2">
-                {selectedPackage.name}
-              </h4>
-              <div className="text-sm space-y-1">
-                <p className="text-gray-600">
-                  Credits: {selectedPackage.credits}
-                </p>
-                <p className="text-gray-900 font-bold">
-                  Amount: ${selectedPackage.price} USDT
-                </p>
+          <form onSubmit={handlePurchase} className="space-y-6">
+            {/* Package Summary Card */}
+            <div className="bg-linear-to-br from-blue-50 to-purple-50 p-6 rounded-2xl border border-blue-100 shadow-sm">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-gray-900">
+                    {selectedPackage.name}
+                  </h4>
+                  <p className="text-sm text-gray-600">Package Details</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white p-3 rounded-lg shadow-sm">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                    Credits
+                  </p>
+                  <p className="text-lg font-bold text-blue-600">
+                    {selectedPackage.credits}
+                  </p>
+                </div>
+                <div className="bg-white p-3 rounded-lg shadow-sm">
+                  <p className="text-xs text-gray-500 uppercase tracking-wide">
+                    Amount
+                  </p>
+                  <p className="text-lg font-bold text-green-600">
+                    ${selectedPackage.price} USDT
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-sm text-gray-700 mb-2">
-                <strong>Payment Instructions:</strong>
-              </p>
-              <ol className="text-sm text-gray-600 list-decimal list-inside space-y-1">
-                <li>
-                  Send ${selectedPackage.price} USDT to the provided wallet
-                  address
-                </li>
-                <li>Copy the transaction ID from your wallet</li>
-                <li>Enter the transaction ID and your wallet address below</li>
-                <li>Wait for admin approval</li>
-              </ol>
+            {/* Wallet Address */}
+            <div className="bg-linear-to-br from-yellow-50 to-orange-50 p-2 rounded-2xl border border-yellow-100 shadow-sm">
+              <div className="flex items-center space-x-3 mb-4">
+                <h4 className="text-xl font-bold text-gray-900 text-center flex-1">
+                  Wallet Address
+                </h4>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm border">
+                <p className="text-sm text-gray-500 text-center uppercase tracking-wide mb-2">
+                  USDT (TRC20) Address
+                </p>
+                <div className="flex items-center flex-col">
+                  <code className="flex-1 font-mono text-sm text-center bg-gray-100 p-3 rounded-lg break-all mb-2">
+                    TK2TMn99SBCrdbZpSef7rFE3vTccvR6dCz
+                  </code>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(
+                        "TK2TMn99SBCrdbZpSef7rFE3vTccvR6dCz"
+                      );
+                      alert("Wallet address copied to clipboard!");
+                    }}
+                    className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors duration-200 font-semibold shadow-sm"
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Transaction ID *
-              </label>
-              <input
-                type="text"
-                value={transactionId}
-                onChange={(e) => setTransactionId(e.target.value)}
-                required
-                placeholder="0x1a2b3c4d5e6f7g8h9i0j"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            {/* Payment Instructions */}
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-100 shadow-sm">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-12 h-12 bg-linear-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <h4 className="text-xl font-bold text-gray-900">
+                    Payment Instructions
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Follow these steps to complete your purchase
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    1
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Send{" "}
+                    <span className="font-bold text-green-600">
+                      ${selectedPackage.price} USDT
+                    </span>{" "}
+                    to the provided wallet address
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    2
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Copy the transaction ID from your wallet
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    3
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Enter the transaction ID and your wallet address below
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    4
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Wait for admin approval
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Your Wallet Address *
-              </label>
-              <input
-                type="text"
-                value={walletAddress}
-                onChange={(e) => setWalletAddress(e.target.value)}
-                required
-                placeholder="TXyz123abc456def789"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
+            {/* Form Fields */}
+            <div className="space-y-4">
+              <div>
+                <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-2">
+                  <svg
+                    className="w-4 h-4 text-blue-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span>Transaction ID</span>
+                </label>
+                <input
+                  type="text"
+                  value={transactionId}
+                  onChange={(e) => setTransactionId(e.target.value)}
+                  required
+                  placeholder="0x1a2b3c4d5e6f7g8h9i0j"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white shadow-sm"
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center space-x-2 text-sm font-semibold text-gray-700 mb-2">
+                  <svg
+                    className="w-4 h-4 text-purple-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                  </svg>
+                  <span>Your Wallet Address</span>
+                </label>
+                <input
+                  type="text"
+                  value={walletAddress}
+                  onChange={(e) => setWalletAddress(e.target.value)}
+                  required
+                  placeholder="TXyz123abc456def789"
+                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 bg-white shadow-sm"
+                />
+              </div>
             </div>
 
-            <div className="flex space-x-3 pt-4">
+            {/* Action Buttons */}
+            <div className="flex space-x-4 pt-4">
               <button
                 type="button"
                 onClick={() => setPurchaseModal(false)}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
+                className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 font-semibold shadow-sm"
                 disabled={submitting}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-blue-300"
+                className="flex-1 px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 font-semibold shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                 disabled={submitting}
               >
-                {submitting ? "Submitting..." : "Submit Payment"}
+                {submitting ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Submitting...</span>
+                  </div>
+                ) : (
+                  "Submit Payment"
+                )}
               </button>
             </div>
           </form>

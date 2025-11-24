@@ -107,7 +107,7 @@ curl -X POST https://your-api-domain.com/telegram-login \
       "tgid": "123456789",
       "username": "johnpartner",
       "referralCode": "A1B2C3D4E5F6",
-      "referralUrl": "https://your-domain.com?ref=A1B2C3D4E5F6",
+      "referralUrl": "https://partner.addmy.co/A1B2C3D4E5F6",
       "userCredits": 10,
       "usedUserCredits": 0,
       "renewalCredits": 5,
@@ -159,7 +159,7 @@ curl -X GET https://your-api-domain.com/profile \
     "username": "johnpartner",
     "email": "john@example.com",
     "referralCode": "A1B2C3D4E5F6",
-    "referralUrl": "https://your-domain.com?ref=A1B2C3D4E5F6",
+    "referralUrl": "https://partner.addmy.co/A1B2C3D4E5F6",
     "userCredits": 10,
     "usedUserCredits": 3,
     "availableUserCredits": 7,
@@ -361,7 +361,7 @@ curl -X GET https://your-api-domain.com/dashboard \
     },
     "referral": {
       "referralCode": "A1B2C3D4E5F6",
-      "referralUrl": "https://your-domain.com?ref=A1B2C3D4E5F6",
+      "referralUrl": "https://partner.addmy.co/A1B2C3D4E5F6",
       "isActive": true
     },
     "users": {
