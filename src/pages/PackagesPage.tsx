@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
@@ -19,6 +20,30 @@ const PackagesPage = () => {
   useEffect(() => {
     fetchPackages();
   }, []);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Keep selectedType in sync with the query parameter
+  useEffect(() => {
+    const p = new URLSearchParams(location.search).get("type");
+    if (p === "USER_CREDITS" || p === "RENEWAL_CREDITS") {
+      setSelectedType(p);
+    } else {
+      setSelectedType("ALL");
+    }
+  }, [location.search]);
+
+  // Read filter 'type' query param and initialize selected type
+  const params = new URLSearchParams(location.search);
+  const paramType = params.get("type");
+  const initialType =
+    paramType && typeof paramType === "string"
+      ? (paramType.toUpperCase() as "USER_CREDITS" | "RENEWAL_CREDITS")
+      : ("ALL" as "ALL");
+  const [selectedType, setSelectedType] = useState<
+    "ALL" | "USER_CREDITS" | "RENEWAL_CREDITS"
+  >(initialType ?? "ALL");
 
   const fetchPackages = async () => {
     try {
@@ -132,71 +157,101 @@ const PackagesPage = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-stagger-container">
-            {packages.map((pkg, index) => (
-              <div
-                key={pkg._id}
-                className="group bg-white bg-opacity-70 backdrop-blur-lg rounded-2xl shadow-xl border border-white border-opacity-50 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 animate-slideUp"
-                style={{ animationDelay: `${index * 0.1}s` }}
+            {/* Filter control */}
+            <div className="col-span-full flex items-center space-x-3">
+              <button
+                onClick={() => {
+                  setSelectedType("ALL");
+                  navigate("/partner/packages");
+                }}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-150 ${
+                  selectedType === "ALL"
+                    ? "bg-white text-purple-600 shadow"
+                    : "bg-gray-50 text-gray-700"
+                }`}
               >
+                All
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedType("USER_CREDITS");
+                  navigate("/partner/packages?type=USER_CREDITS");
+                }}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-150 ${
+                  selectedType === "USER_CREDITS"
+                    ? "bg-linear-to-r from-blue-500 to-cyan-500 text-white shadow"
+                    : "bg-gray-50 text-gray-700"
+                }`}
+              >
+                User Credits
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedType("RENEWAL_CREDITS");
+                  navigate("/partner/packages?type=RENEWAL_CREDITS");
+                }}
+                className={`px-4 py-2 rounded-full text-sm font-semibold transition-all duration-150 ${
+                  selectedType === "RENEWAL_CREDITS"
+                    ? "bg-linear-to-r from-purple-500 to-pink-500 text-white shadow"
+                    : "bg-gray-50 text-gray-700"
+                }`}
+              >
+                Renewal Credits
+              </button>
+            </div>
+            {packages
+              .filter((pkg) =>
+                selectedType === "ALL" ? true : pkg.type === selectedType
+              )
+              .map((pkg, index) => (
                 <div
-                  className={`h-2 ${
-                    pkg.type === "USER_CREDITS"
-                      ? "bg-linear-to-r from-blue-500 to-cyan-500"
-                      : "bg-linear-to-r from-purple-500 to-pink-500"
-                  }`}
-                ></div>
+                  key={pkg._id}
+                  className="group bg-white bg-opacity-70 backdrop-blur-lg rounded-2xl shadow-xl border border-white border-opacity-50 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 animate-slideUp"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div
+                    className={`h-2 ${
+                      pkg.type === "USER_CREDITS"
+                        ? "bg-linear-to-r from-blue-500 to-cyan-500"
+                        : "bg-linear-to-r from-purple-500 to-pink-500"
+                    }`}
+                  ></div>
 
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
-                        {pkg.name}
-                      </h3>
-                      <span
-                        className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
-                          pkg.type === "USER_CREDITS"
-                            ? "bg-linear-to-r from-blue-400 to-cyan-400 text-white"
-                            : "bg-linear-to-r from-purple-400 to-pink-400 text-white"
-                        }`}
-                      >
-                        <svg
-                          className="w-3 h-3"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
+                          {pkg.name}
+                        </h3>
+                        <span
+                          className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
+                            pkg.type === "USER_CREDITS"
+                              ? "bg-linear-to-r from-blue-400 to-cyan-400 text-white"
+                              : "bg-linear-to-r from-purple-400 to-pink-400 text-white"
+                          }`}
                         >
-                          <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                        </svg>
-                        <span>
-                          {pkg.type === "USER_CREDITS"
-                            ? "User Credits"
-                            : "Renewal Credits"}
+                          <svg
+                            className="w-3 h-3"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                          </svg>
+                          <span>
+                            {pkg.type === "USER_CREDITS"
+                              ? "User Credits"
+                              : "Renewal Credits"}
+                          </span>
                         </span>
-                      </span>
-                    </div>
-                    {pkg.discount > 0 && (
-                      <div className="bg-linear-to-r from-green-400 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
-                        {pkg.discount}% OFF
                       </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-3 mb-5">
-                    <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
-                      <span className="text-gray-600 font-medium flex items-center space-x-2">
-                        <svg
-                          className="w-4 h-4"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
-                        </svg>
-                        <span>Credits</span>
-                      </span>
-                      <span className="font-bold text-gray-900 text-lg">
-                        {pkg.credits}
-                      </span>
+                      {pkg.discount > 0 && (
+                        <div className="bg-linear-to-r from-green-400 to-emerald-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
+                          {pkg.discount}% OFF
+                        </div>
+                      )}
                     </div>
-                    {pkg.renewalMonths && (
+
+                    <div className="space-y-3 mb-5">
                       <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                         <span className="text-gray-600 font-medium flex items-center space-x-2">
                           <svg
@@ -204,64 +259,84 @@ const PackagesPage = () => {
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
-                            <path
-                              fillRule="evenodd"
-                              d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                              clipRule="evenodd"
-                            />
+                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
                           </svg>
-                          <span>Period</span>
+                          <span>Credits</span>
                         </span>
-                        <span className="font-bold text-gray-900">
-                          {pkg.renewalMonths} months
+                        <span className="font-bold text-gray-900 text-lg">
+                          {pkg.credits}
                         </span>
                       </div>
-                    )}
-                    <div className="bg-linear-to-br from-green-50 to-emerald-50 p-4 rounded-lg border-2 border-green-200">
-                      {pkg.discount > 0 && (
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-gray-500 text-sm">
-                            Original Price
+                      {pkg.renewalMonths && (
+                        <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                          <span className="text-gray-600 font-medium flex items-center space-x-2">
+                            <svg
+                              className="w-4 h-4"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            <span>Period</span>
                           </span>
-                          <span className="line-through text-gray-400 text-sm">
-                            ${pkg.price}
+                          <span className="font-bold text-gray-900">
+                            {pkg.renewalMonths} months
                           </span>
                         </div>
                       )}
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700 font-semibold">
-                          Final Price
-                        </span>
-                        <div className="flex items-baseline space-x-1">
-                          <span className="text-3xl font-bold text-green-600">
-                            ${pkg.finalPrice}
+                      <div className="bg-linear-to-br from-green-50 to-emerald-50 p-4 rounded-lg border-2 border-green-200">
+                        {pkg.discount > 0 && (
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-gray-500 text-sm">
+                              Original Price
+                            </span>
+                            <span className="line-through text-gray-400 text-sm">
+                              $
+                              {(
+                                (pkg.price * 100) /
+                                (100 - pkg.discount)
+                              ).toFixed(2)}
+                            </span>
+                          </div>
+                        )}
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-700 font-semibold">
+                            Price
                           </span>
-                          <span className="text-sm text-gray-600">USDT</span>
+                          <div className="flex items-baseline space-x-1">
+                            <span className="text-3xl font-bold text-green-600">
+                              ${pkg.price}
+                            </span>
+                            <span className="text-sm text-gray-600">USDT</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
 
-                  <p className="text-gray-600 text-sm mb-5 min-h-10">
-                    {pkg.description}
-                  </p>
+                    <p className="text-gray-600 text-sm mb-5 min-h-10">
+                      {pkg.description}
+                    </p>
 
-                  <button
-                    onClick={() => handleBuyNow(pkg)}
-                    className="w-full px-6 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center space-x-2"
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
+                    <button
+                      onClick={() => handleBuyNow(pkg)}
+                      className="w-full px-6 py-3 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center space-x-2"
                     >
-                      <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
-                    </svg>
-                    <span>Buy Now</span>
-                  </button>
+                      <svg
+                        className="w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                      </svg>
+                      <span>Buy Now</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </div>
@@ -295,7 +370,7 @@ const PackagesPage = () => {
                   Credits: {selectedPackage.credits}
                 </p>
                 <p className="text-gray-900 font-bold">
-                  Amount: ${selectedPackage.finalPrice} USDT
+                  Amount: ${selectedPackage.price} USDT
                 </p>
               </div>
             </div>
@@ -306,7 +381,7 @@ const PackagesPage = () => {
               </p>
               <ol className="text-sm text-gray-600 list-decimal list-inside space-y-1">
                 <li>
-                  Send ${selectedPackage.finalPrice} USDT to the provided wallet
+                  Send ${selectedPackage.price} USDT to the provided wallet
                   address
                 </li>
                 <li>Copy the transaction ID from your wallet</li>
