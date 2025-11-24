@@ -1,0 +1,45 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  deployments: write
+  id-token: write
+
+concurrency:
+  group: "production-deploy"
+  cancel-in-progress: true
+jobs:
+  deploy:
+    environment:
+      name: production
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "yarn"
+      - name: add dependencies
+        run: yarn install
+      - name: Build project
+        run: yarn build
+      - name: Deploy to Production Server
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_KEY: ${{ secrets.VPS_KEY }}
+        run: |
+          echo "$VPS_KEY" > key.pem
+          chmod 600 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no $VPS_USER@$VPS_HOST << 'EOF'
+            cd addmyco-twa/
+            git pull
+            yarn install
+            yarn build
+          EOF
