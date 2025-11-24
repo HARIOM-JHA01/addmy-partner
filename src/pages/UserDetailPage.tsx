@@ -111,66 +111,112 @@ const UserDetailPage = () => {
 
   return (
     <Layout>
-      <div className="max-w-5xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">User Details</h1>
+      <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
+        <div className="flex items-center justify-between animate-slideDown">
+          <div className="flex items-center space-x-4">
+            <div className="w-14 h-14 bg-linear-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+              <svg
+                className="w-8 h-8 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-4xl font-bold bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                User Details
+              </h1>
+              <p className="text-gray-600 mt-1">
+                View and manage user information
+              </p>
+            </div>
+          </div>
           <button
             onClick={() => navigate("/partner/users")}
-            className="px-4 py-2 text-gray-700 border border-gray-300 rounded-md hover:bg-gray-50"
+            className="px-6 py-3 text-purple-700 font-semibold border-2 border-purple-300 rounded-xl hover:bg-purple-50 transition-all duration-200 hover:scale-105 flex items-center space-x-2"
           >
-            ← Back to Users
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Back to Users</span>
           </button>
         </div>
 
         {/* User Profile Card */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            Profile Information
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+        <div className="bg-white bg-opacity-70 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-white border-opacity-50 animate-slideUp">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-10 h-10 bg-linear-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+              <svg
+                className="w-6 h-6 text-white"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-800">
+              Profile Information
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="bg-linear-to-br from-blue-50 to-cyan-50 p-5 rounded-xl border border-blue-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Username
               </label>
-              <p className="mt-1 text-lg text-gray-900">
+              <p className="text-xl font-bold text-gray-900">
                 @{user.user.username}
               </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+            <div className="bg-linear-to-br from-purple-50 to-pink-50 p-5 rounded-xl border border-purple-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Name (English)
               </label>
-              <p className="mt-1 text-lg text-gray-900">
+              <p className="text-xl font-bold text-gray-900">
                 {user.user.nameEnglish}
               </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Name (Chinese)
               </label>
-              <p className="mt-1 text-lg text-gray-900">
+              <p className="text-xl font-bold text-gray-900">
                 {user.user.nameChinese}
               </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+            <div className="bg-linear-to-br from-indigo-50 to-purple-50 p-5 rounded-xl border border-indigo-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Telegram ID
               </label>
-              <p className="mt-1 text-lg text-gray-900">{user.user.tgid}</p>
+              <p className="text-xl font-bold text-gray-900">
+                {user.user.tgid}
+              </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+            <div className="bg-linear-to-br from-amber-50 to-orange-50 p-5 rounded-xl border border-amber-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Email
               </label>
-              <p className="mt-1 text-lg text-gray-900">
+              <p className="text-xl font-bold text-gray-900">
                 {user.user.email || "Not provided"}
               </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+            <div className="bg-linear-to-br from-rose-50 to-pink-50 p-5 rounded-xl border border-rose-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Contact
               </label>
-              <p className="mt-1 text-lg text-gray-900">
+              <p className="text-xl font-bold text-gray-900">
                 {user.user.contact || "Not provided"}
               </p>
             </div>
@@ -178,46 +224,108 @@ const UserDetailPage = () => {
         </div>
 
         {/* Membership Status Card */}
-        <div className="bg-white p-6 rounded-lg shadow">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">
-              Membership Status
-            </h2>
+        <div
+          className="bg-white bg-opacity-70 backdrop-blur-lg p-8 rounded-2xl shadow-xl border border-white border-opacity-50 animate-slideUp"
+          style={{ animationDelay: "0.1s" }}
+        >
+          <div className="flex justify-between items-center mb-6">
+            <div className="flex items-center space-x-3">
+              <div
+                className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                  user.isExpired
+                    ? "bg-linear-to-br from-red-400 to-pink-500"
+                    : "bg-linear-to-br from-green-400 to-emerald-500"
+                }`}
+              >
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  {user.isExpired ? (
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                      clipRule="evenodd"
+                    />
+                  ) : (
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
+                  )}
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800">
+                Membership Status
+              </h2>
+            </div>
             {!user.isExpired && (
-              <span className="px-4 py-2 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                Active
+              <span className="inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-bold bg-linear-to-r from-green-400 to-emerald-500 text-white shadow-md">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>Active</span>
               </span>
             )}
             {user.isExpired && (
-              <span className="px-4 py-2 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                Expired
+              <span className="inline-flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-bold bg-linear-to-r from-red-400 to-pink-500 text-white shadow-md">
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <span>Expired</span>
               </span>
             )}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="bg-linear-to-br from-blue-50 to-cyan-50 p-5 rounded-xl border border-blue-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Join Date
               </label>
-              <p className="mt-1 text-lg text-gray-900">
+              <p className="text-xl font-bold text-gray-900">
                 {format(new Date(user.joinDate), "MMM dd, yyyy")}
               </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+            <div className="bg-linear-to-br from-purple-50 to-pink-50 p-5 rounded-xl border border-purple-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Expiry Date
               </label>
-              <p className="mt-1 text-lg text-gray-900">
+              <p className="text-xl font-bold text-gray-900">
                 {format(new Date(user.membershipExpiryDate), "MMM dd, yyyy")}
               </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+            <div
+              className={`p-5 rounded-xl border-2 ${
+                user.isExpired
+                  ? "bg-linear-to-br from-red-50 to-pink-50 border-red-300"
+                  : user.daysUntilExpiry < 30
+                  ? "bg-linear-to-br from-orange-50 to-red-50 border-orange-300"
+                  : "bg-linear-to-br from-green-50 to-emerald-50 border-green-300"
+              }`}
+            >
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Days Until Expiry
               </label>
               <p
-                className={`mt-1 text-lg font-bold ${
+                className={`text-3xl font-bold ${
                   user.isExpired
                     ? "text-red-600"
                     : user.daysUntilExpiry < 30
@@ -228,11 +336,17 @@ const UserDetailPage = () => {
                 {user.isExpired ? "Expired" : `${user.daysUntilExpiry} days`}
               </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-600">
+            <div className="bg-linear-to-br from-indigo-50 to-purple-50 p-5 rounded-xl border border-indigo-100">
+              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Renewal Count
               </label>
-              <p className="mt-1 text-lg text-gray-900">{user.renewalCount}</p>
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 bg-purple-200 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl font-bold text-purple-700">
+                    {user.renewalCount}
+                  </span>
+                </div>
+              </div>
             </div>
             {user.lastRenewalDate && (
               <>

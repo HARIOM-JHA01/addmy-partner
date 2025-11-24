@@ -6,9 +6,6 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: "/partner/",
   server: {
-    allowedHosts: [
-      "olympic-putting-avenue-enormous.trycloudflare.com",
-      "localhost",
-    ],
+    allowedHosts: true,
   },
 });
