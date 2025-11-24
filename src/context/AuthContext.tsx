@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import api from "../services/api";
+import WebApp from "@twa-dev/sdk";
 import type { Partner } from "../types";
 
 interface AuthContextType {
@@ -11,7 +12,7 @@ interface AuthContextType {
     name: string,
     username: string,
     email?: string
-  ) => Promise<void>;
+  ) => Promise<any>;
   logout: () => void;
   updatePartner: (partner: Partner) => void;
 }
@@ -32,8 +33,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const initAuth = async () => {
+      // If opened inside Telegram mini app, always show login page
+      // so users explicitly authenticate each open. We detect telegram
+      // by checking WebApp init data which the twa SDK exposes.
+      const isTelegramMiniApp = !!WebApp?.initDataUnsafe?.user;
+
       const token = localStorage.getItem("authToken");
-      if (token) {
+      if (token && !isTelegramMiniApp) {
         try {
           const response = await api.get("/partner/profile");
           if (response.data.success) {
@@ -82,6 +88,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (response.data && response.data.success) {
       localStorage.setItem("authToken", response.data.data.token);
       setPartner(response.data.data.partner);
+      return response.data; // return data so callers can inspect message / partner
     } else {
       throw new Error("Login failed");
     }

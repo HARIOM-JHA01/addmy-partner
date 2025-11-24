@@ -13,6 +13,7 @@ import PackagesPage from "./pages/PackagesPage";
 import PaymentHistoryPage from "./pages/PaymentHistoryPage";
 import UsersListPage from "./pages/UsersListPage";
 import UserDetailPage from "./pages/UserDetailPage";
+import WelcomePage from "./pages/WelcomePage";
 
 function App() {
   return (
@@ -71,6 +72,26 @@ function App() {
             element={
               <ProtectedRoute>
                 <UserDetailPage />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Welcome page (kept under /welcome for backward compatibility)
+              and also expose it under /partner/welcome to match navigation
+              performed from LoginPage */}
+          <Route
+            path="/welcome"
+            element={
+              <ProtectedRoute>
+                <WelcomePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/partner/welcome"
+            element={
+              <ProtectedRoute>
+                <WelcomePage />
               </ProtectedRoute>
             }
           />
