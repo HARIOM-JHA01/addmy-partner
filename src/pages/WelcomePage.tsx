@@ -16,9 +16,12 @@ const WelcomePage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           {/* Left: Hero text */}
           <div className="space-y-6">
-            <h1 className="text-4xl md:text-5xl text-center font-bold leading-tight bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-xl md:text-5xl text-center font-bold leading-tight bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               Welcome to addmyco Partner Program
             </h1>
+            <p className="text-gray-600 text-center md:text-lg">
+              Please buy your credits to start over and get your referral code.
+            </p>
           </div>
           {/* Right: Cards with actions */}
           <div className="space-y-6">
@@ -26,9 +29,7 @@ const WelcomePage = () => {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <div className="text-sm text-gray-500">User Credits</div>
-                  <div className="text-xl font-semibold">
-                    Buy credits for new users
-                  </div>
+                  <div className="text-xl font-semibold">Buy User Credits</div>
                 </div>
                 <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center text-white">
                   <svg
@@ -64,7 +65,7 @@ const WelcomePage = () => {
                 <div>
                   <div className="text-sm text-gray-500">Renewal Credits</div>
                   <div className="text-xl font-semibold">
-                    Renew memberships easily
+                    Buy Renewal Credits
                   </div>
                 </div>
                 <div className="w-12 h-12 bg-linear-to-br from-purple-500 to-purple-700 rounded-lg flex items-center justify-center text-white">
