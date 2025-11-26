@@ -87,7 +87,7 @@ const PackagesPage = () => {
 
       if (response.data.success) {
         webApp.showAlert(
-          "Payment submitted successfully! Waiting for admin approval."
+          "Payment details submitted successfully! Please wait for admin approval."
         );
         setPurchaseModal(false);
         setTransactionId("");
@@ -163,8 +163,8 @@ const PackagesPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-stagger-container">
             {/* Filter control */}
-            <div className="col-span-full flex items-center space-x-3">
-              <button
+            <div className="col-span-full flex items-center space-x-3 justify-center">
+              {/* <button
                 onClick={() => {
                   setSelectedType("ALL");
                   navigate("/partner/packages");
@@ -176,7 +176,7 @@ const PackagesPage = () => {
                 }`}
               >
                 All
-              </button>
+              </button> */}
               <button
                 onClick={() => {
                   setSelectedType("USER_CREDITS");
@@ -396,6 +396,20 @@ const PackagesPage = () => {
                   <p className="text-sm text-gray-600">Package Details</p>
                 </div>
               </div>
+              <div className="mb-4">
+                <span
+                  className={`inline-flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold shadow-sm ${
+                    selectedPackage.type === "USER_CREDITS"
+                      ? "bg-linear-to-r from-blue-400 to-cyan-400 text-white"
+                      : "bg-linear-to-r from-purple-400 to-pink-400 text-white"
+                  }`}
+                >
+                  {" "}
+                  {selectedPackage.type === "USER_CREDITS"
+                    ? "User Credits"
+                    : "Renewal Credits"}
+                </span>
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white p-3 rounded-lg shadow-sm">
                   <p className="text-xs text-gray-500 uppercase tracking-wide">
@@ -416,6 +430,52 @@ const PackagesPage = () => {
               </div>
             </div>
 
+            {/* Payment Instructions */}
+            <div className="bg-linear-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-100 shadow-sm">
+              <div className="flex flex-col items-center space-x-3 mb-4 text-center">
+                <h2>
+                  Kindly send {selectedPackage.price} USDT amount in telegram
+                  contact <span className="font-bold">@Bluemarketer</span>
+                </h2>
+                <h2 className="text-green-600">No Fees No charges!!!</h2>
+                <br />
+                <div>
+                  <h4 className="text-xl font-bold text-gray-900">
+                    Payment Instructions
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Follow these steps to complete your purchase
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    1
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Select {">"} Wallet {">"} Dollar {">"} Send
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    2
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Select {">"} Telegram Contact
+                  </p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    3
+                  </div>
+                  <p className="text-sm text-gray-700">
+                    Select contact "@Bluemarketer"
+                  </p>
+                </div>
+              </div>
+            </div>
+            <p>or send external USDT to following address</p>
             {/* Wallet Address */}
             <div className="bg-linear-to-br from-yellow-50 to-orange-50 p-2 rounded-2xl border border-yellow-100 shadow-sm">
               <div className="flex items-center space-x-3 mb-4">
@@ -443,71 +503,6 @@ const PackagesPage = () => {
                   >
                     Copy
                   </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Payment Instructions */}
-            <div className="bg-linear-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-100 shadow-sm">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-12 h-12 bg-linear-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <svg
-                    className="w-6 h-6 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="text-xl font-bold text-gray-900">
-                    Payment Instructions
-                  </h4>
-                  <p className="text-sm text-gray-600">
-                    Follow these steps to complete your purchase
-                  </p>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                    1
-                  </div>
-                  <p className="text-sm text-gray-700">
-                    Send{" "}
-                    <span className="font-bold text-green-600">
-                      ${selectedPackage.price} USDT
-                    </span>{" "}
-                    to the provided wallet address
-                  </p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                    2
-                  </div>
-                  <p className="text-sm text-gray-700">
-                    Copy the transaction ID from your wallet
-                  </p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                    3
-                  </div>
-                  <p className="text-sm text-gray-700">
-                    Enter the transaction ID and your wallet address below
-                  </p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                    4
-                  </div>
-                  <p className="text-sm text-gray-700">
-                    Wait for admin approval
-                  </p>
                 </div>
               </div>
             </div>

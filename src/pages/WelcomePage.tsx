@@ -1,12 +1,30 @@
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { BackButton } from "@twa-dev/sdk/react";
+import api from "../services/api";
+import type { PendingTransaction } from "../types";
 
 const WelcomePage = () => {
+  const [pendingTransactions, setPendingTransactions] = useState<
+    PendingTransaction[]
+  >([]);
+
   useEffect(() => {
     <BackButton onClick={() => window.history.back()} />;
+    fetchPendingTransactions();
   }, []);
+
+  const fetchPendingTransactions = async () => {
+    try {
+      const response = await api.get("/partner/pending-transactions");
+      if (response.data.success) {
+        setPendingTransactions(response.data.data.pendingTransactions);
+      }
+    } catch (err: any) {
+      console.error("Failed to fetch pending transactions", err);
+    }
+  };
   return (
     <Layout>
       <div className="animate-fadeIn relative">
@@ -20,7 +38,14 @@ const WelcomePage = () => {
               Welcome to addmyco Partner Program
             </h1>
             <p className="text-gray-600 text-center font-bold md:text-lg">
-              Please buy your credits to start over and get your referral code.
+              {pendingTransactions.length > 0 ? (
+                <span className="text-red-400">
+                  Your last transaction is still not approved, Kindly wait for
+                  approval to get started
+                </span>
+              ) : (
+                "Please buy your credits to start over and get your referral code."
+              )}
             </p>
           </div>
           {/* Right: Cards with actions */}
@@ -28,7 +53,9 @@ const WelcomePage = () => {
             <div className="bg-white p-6 rounded-2xl shadow-2xl border border-gray-100">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <div className="text-sm text-gray-500">User Credits</div>
+                  <div className="text-sm text-gray-500">
+                    Available User Credits: 0
+                  </div>
                   <div className="text-xl font-semibold">Buy User Credits</div>
                 </div>
                 <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center text-white">
@@ -63,7 +90,9 @@ const WelcomePage = () => {
             <div className="bg-white p-6 rounded-2xl shadow-2xl border border-gray-100">
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <div className="text-sm text-gray-500">Renewal Credits</div>
+                  <div className="text-sm text-gray-500">
+                    Available Renewal Credits: 0
+                  </div>
                   <div className="text-xl font-semibold">
                     Buy Renewal Credits
                   </div>

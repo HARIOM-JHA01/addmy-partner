@@ -123,3 +123,23 @@ export interface PaginationInfo {
   totalRecords: number;
   limit: number;
 }
+
+export interface PendingTransaction {
+  _id: string;
+  partner: string;
+  package: {
+    name: string;
+    type: string;
+    credits: number;
+  };
+  packageType: string;
+  amount: number;
+  credits: number;
+  transactionId: string;
+  walletAddress: string;
+  status: number;
+  paymentStatus: number;
+  paymentDate: string;
+  createdAt: string;
+  updatedAt: string;
+}

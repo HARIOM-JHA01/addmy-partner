@@ -5,14 +5,22 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import api from "../services/api";
 import type { DashboardStats } from "../types";
+import WebApp from "@twa-dev/sdk";
+
+import userIcon from "../assets/user-icon.jpeg";
+import referralIcon from "../assets/renewal-icon.jpeg";
 
 const DashboardPage = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const [user, setUser] = useState<
+    typeof WebApp.initDataUnsafe.user | null | undefined
+  >(null);
   useEffect(() => {
     fetchDashboard();
+    const user = WebApp.initDataUnsafe?.user;
+    setUser(user);
   }, []);
 
   const fetchDashboard = async () => {
@@ -58,18 +66,11 @@ const DashboardPage = () => {
   return (
     <Layout>
       <div className="space-y-8 animate-fadeIn">
-        <div className="flex items-center justify-between animate-slideDown">
-          <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Dashboard
+        <div>
+          <h1 className="text-2xl md:text-5xl font-bold text-gray-800">
+            Dashboard of {user?.first_name} {user?.last_name}
           </h1>
-          <div className="text-sm text-gray-600">
-            Welcome back,{" "}
-            <span className="font-semibold text-purple-600">
-              {stats.referral.referralCode}
-            </span>
-          </div>
         </div>
-
         {stats.credits.availableUserCredits === 0 && (
           <div
             className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6 animate-fadeIn"
@@ -81,100 +82,6 @@ const DashboardPage = () => {
             </span>
           </div>
         )}
-
-        {/* Credits Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-stagger-container">
-          <div className="bg-linear-to-br from-blue-500 to-blue-700 p-8 rounded-2xl shadow-2xl text-white transform transition-all duration-300 hover:scale-105 hover:shadow-3xl animate-slideUp">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold">User Credits</h3>
-              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                </svg>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-blue-100">Total Credits</span>
-                <span className="text-3xl font-bold">
-                  {stats.credits.userCredits}
-                </span>
-              </div>
-              <div className="h-px bg-white bg-opacity-20"></div>
-              <div className="flex justify-between items-center">
-                <span className="text-blue-100">Used</span>
-                <span className="text-xl font-semibold">
-                  {stats.credits.usedUserCredits}
-                </span>
-              </div>
-              <div className="flex justify-between items-center pt-2 border-t border-white border-opacity-20">
-                <span className="text-white font-semibold">Available</span>
-                <span className="text-3xl font-bold text-green-300">
-                  {stats.credits.availableUserCredits}
-                </span>
-              </div>
-              <Link
-                to="/partner/packages"
-                className="mt-4 w-full bg-white bg-opacity-20 text-white py-2 px-4 rounded-lg text-center font-semibold hover:bg-opacity-30 transition-all duration-200 block"
-              >
-                Buy More Credits
-              </Link>
-            </div>
-          </div>
-
-          <div
-            className="bg-linear-to-br from-purple-500 to-purple-700 p-8 rounded-2xl shadow-2xl text-white transform transition-all duration-300 hover:scale-105 hover:shadow-3xl animate-slideUp"
-            style={{ animationDelay: "0.1s" }}
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold">Renewal Credits</h3>
-              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <svg
-                  className="w-6 h-6"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-purple-100">Total Credits</span>
-                <span className="text-3xl font-bold">
-                  {stats.credits.renewalCredits}
-                </span>
-              </div>
-              <div className="h-px bg-white bg-opacity-20"></div>
-              <div className="flex justify-between items-center">
-                <span className="text-purple-100">Used</span>
-                <span className="text-xl font-semibold">
-                  {stats.credits.usedRenewalCredits}
-                </span>
-              </div>
-              <div className="flex justify-between items-center pt-2 border-t border-white border-opacity-20">
-                <span className="text-white font-semibold">Available</span>
-                <span className="text-3xl font-bold text-green-300">
-                  {stats.credits.availableRenewalCredits}
-                </span>
-              </div>
-              <Link
-                to="/partner/packages"
-                className="mt-4 w-full bg-white bg-opacity-20 text-white py-2 px-4 rounded-lg text-center font-semibold hover:bg-opacity-30 transition-all duration-200 block"
-              >
-                Buy More Credits
-              </Link>
-            </div>
-          </div>
-        </div>
 
         {/* Referral Section */}
         <div
@@ -192,7 +99,7 @@ const DashboardPage = () => {
                 <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
               </svg>
             </div>
-            <h3 className="text-2xl font-bold text-gray-800">
+            <h3 className="text-xl font-bold text-gray-800">
               Referral Information
             </h3>
           </div>
@@ -227,7 +134,6 @@ const DashboardPage = () => {
                     d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                   />
                 </svg>
-                <span>Copy</span>
               </button>
             </div>
             <div className="flex justify-between items-center">
@@ -245,7 +151,90 @@ const DashboardPage = () => {
           </div>
         </div>
 
+        {/* Credits Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-stagger-container">
+          <div className="bg-linear-to-br from-blue-500 to-blue-700 p-8 rounded-2xl shadow-2xl text-white transform transition-all duration-300 hover:scale-105 hover:shadow-3xl animate-slideUp">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold">User Credits</h3>
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <img src={userIcon} alt="User Icon" className="rounded-full" />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-blue-100">Total Credits</span>
+                <span className="text-3xl font-bold">
+                  {stats.credits.userCredits}
+                </span>
+              </div>
+              <div className="h-px bg-white bg-opacity-20"></div>
+              <div className="flex justify-between items-center">
+                <span className="text-blue-100">Used</span>
+                <span className="text-xl font-semibold">
+                  {stats.credits.usedUserCredits}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-white border-opacity-20">
+                <span className="text-white font-semibold">Available</span>
+                <span className="text-3xl font-bold text-green-300">
+                  {stats.credits.availableUserCredits}
+                </span>
+              </div>
+              <Link
+                to="/partner/packages"
+                className="mt-4 w-full bg-white bg-opacity-20 text-black py-2 px-4 rounded-lg text-center font-semibold hover:bg-opacity-30 transition-all duration-200 block"
+              >
+                Buy More Credits
+              </Link>
+            </div>
+          </div>
+
+          <div
+            className="bg-linear-to-br from-purple-500 to-purple-700 p-8 rounded-2xl shadow-2xl text-white transform transition-all duration-300 hover:scale-105 hover:shadow-3xl animate-slideUp"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold">Renewal Credits</h3>
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <img
+                  src={referralIcon}
+                  alt="Renewal Icon"
+                  className="rounded-full"
+                />
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-purple-100">Total Credits</span>
+                <span className="text-3xl font-bold">
+                  {stats.credits.renewalCredits}
+                </span>
+              </div>
+              <div className="h-px bg-white bg-opacity-20"></div>
+              <div className="flex justify-between items-center">
+                <span className="text-purple-100">Used</span>
+                <span className="text-xl font-semibold">
+                  {stats.credits.usedRenewalCredits}
+                </span>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-white border-opacity-20">
+                <span className="text-white font-semibold">Available</span>
+                <span className="text-3xl font-bold text-green-300">
+                  {stats.credits.availableRenewalCredits}
+                </span>
+              </div>
+              <Link
+                to="/partner/packages"
+                className="mt-4 w-full bg-white bg-opacity-20 text-black py-2 px-4 rounded-lg text-center font-semibold hover:bg-opacity-30 transition-all duration-200 block"
+              >
+                Buy More Credits
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Stats Cards */}
+        <h2 className="font-bold text-2xl text-center">Statistics</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 animate-stagger-container">
           <div
             className="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border-l-4 border-blue-500 animate-slideUp"
@@ -253,7 +242,7 @@ const DashboardPage = () => {
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
-                Total Users
+                Total Users Joined
               </h3>
               <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                 <svg
@@ -301,7 +290,7 @@ const DashboardPage = () => {
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
-                Expired Users
+                Membership Expired
               </h3>
               <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
                 <svg
@@ -327,7 +316,7 @@ const DashboardPage = () => {
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
-                This Month
+                User Joined This Month
               </h3>
               <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
                 <svg
@@ -351,32 +340,6 @@ const DashboardPage = () => {
 
         {/* Additional Stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-stagger-container">
-          <div
-            className="bg-linear-to-br from-purple-50 to-pink-50 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-purple-200 animate-slideUp"
-            style={{ animationDelay: "0.5s" }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                Total Renewals
-              </h3>
-              <div className="w-10 h-10 bg-purple-200 rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-6 h-6 text-purple-700"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </div>
-            </div>
-            <p className="text-4xl font-bold bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              {stats.renewals.total}
-            </p>
-          </div>
           <div
             className="bg-linear-to-br from-orange-50 to-red-50 p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-orange-200 animate-slideUp"
             style={{ animationDelay: "0.55s" }}

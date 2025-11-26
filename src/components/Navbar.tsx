@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import logo from "../assets/logo.png";
+import logo from "../assets/addmy-partner-logo.jpeg";
 
 const Navbar = () => {
   const { partner, logout } = useAuth();
@@ -101,7 +101,7 @@ const Navbar = () => {
               <img
                 src={logo}
                 alt="Logo"
-                className="h-10 w-10 transition-transform duration-300 group-hover:scale-110"
+                className="h-10 w-10 transition-transform duration-300 group-hover:scale-110 rounded-full"
               />
               <span className="text-xl font-bold text-white drop-shadow-lg">
                 Partner Portal
@@ -146,7 +146,7 @@ const Navbar = () => {
                     : "text-white hover:bg-white hover:bg-opacity-20"
                 }`}
               >
-                Payments
+                Payments History
               </Link>
               <Link
                 to="/partner/profile"
@@ -296,7 +296,7 @@ const Navbar = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Payments</span>
+                <span>Payments History</span>
               </Link>
               <Link
                 to="/partner/profile"

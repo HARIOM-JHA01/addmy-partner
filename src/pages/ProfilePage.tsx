@@ -5,12 +5,16 @@ import ErrorMessage from "../components/ErrorMessage";
 import api from "../services/api";
 import type { Partner } from "../types";
 import { format } from "date-fns";
+import WebApp from "@twa-dev/sdk";
+
+import userIcon from "../assets/user-icon.jpeg";
+import referralIcon from "../assets/renewal-icon.jpeg";
 
 const ProfilePage = () => {
   const [profile, setProfile] = useState<Partner | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
+  const user = WebApp.initDataUnsafe?.user;
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -73,7 +77,7 @@ const ProfilePage = () => {
             </svg>
           </div>
           <div>
-            <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               My Profile
             </h1>
             <p className="text-gray-600 mt-1">
@@ -98,7 +102,7 @@ const ProfilePage = () => {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-gray-800">
               Personal Information
             </h2>
           </div>
@@ -107,29 +111,17 @@ const ProfilePage = () => {
               <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
                 Name
               </label>
-              <p className="text-xl font-bold text-gray-900">{profile.name}</p>
+              <p className="text-xl font-bold text-gray-900">
+                {user?.first_name} {user?.last_name}
+              </p>
             </div>
             <div className="bg-linear-to-br from-purple-50 to-pink-50 p-5 rounded-xl border border-purple-100">
               <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                Username
+                Telegram Username
               </label>
               <p className="text-xl font-bold text-gray-900">
                 @{profile.username}
               </p>
-            </div>
-            <div className="bg-linear-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100">
-              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                Email
-              </label>
-              <p className="text-xl font-bold text-gray-900">
-                {profile.email || "Not provided"}
-              </p>
-            </div>
-            <div className="bg-linear-to-br from-indigo-50 to-purple-50 p-5 rounded-xl border border-indigo-100">
-              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                Telegram ID
-              </label>
-              <p className="text-xl font-bold text-gray-900">{profile.tgid}</p>
             </div>
             {profile.joinDate && (
               <div className="bg-linear-to-br from-amber-50 to-orange-50 p-5 rounded-xl border border-amber-100">
@@ -211,12 +203,11 @@ const ProfilePage = () => {
                       d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
                     />
                   </svg>
-                  <span>Copy</span>
                 </button>
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3">
+            <div className="flex justify-between">
+              <label className="block text-sm font-semibold text-gray-700">
                 Status
               </label>
               <span
@@ -290,14 +281,12 @@ const ProfilePage = () => {
             <div className="bg-linear-to-br from-blue-500 to-blue-700 p-6 rounded-xl shadow-lg text-white">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold">User Credits</h3>
-                <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                  </svg>
+                <div className="w-10 h-10  bg-opacity-20 rounded-lg flex items-center justify-center">
+                  <img
+                    src={userIcon}
+                    alt="User Icon"
+                    className="rounded-full"
+                  />
                 </div>
               </div>
               <div className="space-y-3">
@@ -326,18 +315,12 @@ const ProfilePage = () => {
             <div className="bg-linear-to-br from-purple-500 to-purple-700 p-6 rounded-xl shadow-lg text-white">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-bold">Renewal Credits</h3>
-                <div className="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
-                  <svg
-                    className="w-6 h-6"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                <div className="w-10 h-10 bg-opacity-20 rounded-lg flex items-center justify-center">
+                  <img
+                    src={referralIcon}
+                    alt="Renewal Icon"
+                    className="rounded-full"
+                  />
                 </div>
               </div>
               <div className="space-y-3">

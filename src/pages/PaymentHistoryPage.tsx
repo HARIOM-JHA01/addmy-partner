@@ -127,7 +127,7 @@ const PaymentHistoryPage = () => {
               </svg>
             </div>
             <div>
-              <h1 className="text-4xl font-bold bg-linear-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-linear-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
                 Payment History
               </h1>
               <p className="text-gray-600 mt-1">
@@ -256,7 +256,7 @@ const PaymentHistoryPage = () => {
                               />
                             </svg>
                             <span className="text-sm font-bold text-green-600">
-                              ${payment.amount}
+                              {payment.amount}
                             </span>
                           </div>
                         </td>
