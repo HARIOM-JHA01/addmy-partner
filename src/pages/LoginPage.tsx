@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import WebApp from "@twa-dev/sdk";
+import logo from "../assets/addmy-partner-logo.jpeg";
 
 const LoginPage = () => {
   const { login, partner } = useAuth();
@@ -79,25 +80,12 @@ const LoginPage = () => {
         <div className="text-center mb-8">
           <div className="flex justify-center mb-6">
             <div className="w-20 h-20 bg-linear-to-br from-blue-500 via-purple-600 to-pink-500 rounded-3xl flex items-center justify-center shadow-2xl animate-bounce-slow">
-              <svg
-                className="w-12 h-12 text-white"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
-              </svg>
+              <img src={logo} alt="addmyco Logo" className="w-12 h-12" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
-            Partner Portal
+          <h1 className="text-xl font-bold bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-3">
+            Welcome to addmyco.!!! Partner Portal
           </h1>
-          <p className="text-gray-600 text-lg">
-            Sign in with your Telegram account
-          </p>
-          <div className="mt-4 flex items-center justify-center space-x-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-            <span className="text-sm text-gray-500">Secure Login</span>
-          </div>
         </div>
 
         <button
@@ -126,18 +114,11 @@ const LoginPage = () => {
                 <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
               </svg>
               <span className="relative z-10 group-hover:translate-x-1 transition-transform duration-300">
-                Login with Telegram
+                Login to partner app
               </span>
             </>
           )}
         </button>
-
-        <div className="mt-6 text-center text-sm text-gray-500">
-          <p>By signing in, you agree to our</p>
-          <p className="text-purple-600 font-semibold">
-            Terms of Service & Privacy Policy
-          </p>
-        </div>
       </div>
     </div>
   );

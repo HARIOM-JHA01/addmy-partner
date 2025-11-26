@@ -70,6 +70,18 @@ const DashboardPage = () => {
           </div>
         </div>
 
+        {stats.credits.availableUserCredits === 0 && (
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6 animate-fadeIn"
+            role="alert"
+          >
+            <span className="block sm:inline">
+              You do not have any user credits therefor your referral link has
+              been disabled till renew.
+            </span>
+          </div>
+        )}
+
         {/* Credits Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-stagger-container">
           <div className="bg-linear-to-br from-blue-500 to-blue-700 p-8 rounded-2xl shadow-2xl text-white transform transition-all duration-300 hover:scale-105 hover:shadow-3xl animate-slideUp">
@@ -105,6 +117,12 @@ const DashboardPage = () => {
                   {stats.credits.availableUserCredits}
                 </span>
               </div>
+              <Link
+                to="/partner/packages"
+                className="mt-4 w-full bg-white bg-opacity-20 text-white py-2 px-4 rounded-lg text-center font-semibold hover:bg-opacity-30 transition-all duration-200 block"
+              >
+                Buy More Credits
+              </Link>
             </div>
           </div>
 
@@ -148,6 +166,12 @@ const DashboardPage = () => {
                   {stats.credits.availableRenewalCredits}
                 </span>
               </div>
+              <Link
+                to="/partner/packages"
+                className="mt-4 w-full bg-white bg-opacity-20 text-white py-2 px-4 rounded-lg text-center font-semibold hover:bg-opacity-30 transition-all duration-200 block"
+              >
+                Buy More Credits
+              </Link>
             </div>
           </div>
         </div>

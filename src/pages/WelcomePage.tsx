@@ -19,7 +19,7 @@ const WelcomePage = () => {
             <h1 className="text-xl md:text-5xl text-center font-bold leading-tight bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               Welcome to addmyco Partner Program
             </h1>
-            <p className="text-gray-600 text-center md:text-lg">
+            <p className="text-gray-600 text-center font-bold md:text-lg">
               Please buy your credits to start over and get your referral code.
             </p>
           </div>
