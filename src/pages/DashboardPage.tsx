@@ -38,8 +38,11 @@ const DashboardPage = () => {
   };
 
   const copyReferralUrl = () => {
-    if (stats?.referral.referralUrl) {
-      navigator.clipboard.writeText(stats.referral.referralUrl);
+    const url = `https://partner.addmy.co/t.me/ref-${
+      stats?.referral.referralCode ?? ""
+    }`;
+    if (url) {
+      navigator.clipboard.writeText(url);
       alert("Referral URL copied to clipboard!");
     }
   };
@@ -113,7 +116,7 @@ const DashboardPage = () => {
             <div className="flex items-center space-x-3">
               <input
                 type="text"
-                value={stats.referral.referralUrl}
+                value={`https://partner.addmy.co/t.me/ref-${stats.referral.referralCode}`}
                 readOnly
                 className="flex-1 px-4 py-3 border-2 border-purple-200 rounded-xl bg-white focus:border-purple-400 focus:ring-2 focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
               />
