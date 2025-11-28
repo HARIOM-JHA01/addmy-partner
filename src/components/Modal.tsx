@@ -30,7 +30,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
       />
 
       <div className="relative bg-white rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] flex flex-col">
-        <div className="flex items-center justify-between px-4 py-3 border-b shrink-0">
+        <div className="flex items-center bg-blue-400 justify-between px-4 py-3 border-b shrink-0">
           <h3 className="text-lg font-medium text-gray-900 text-center flex-1">
             {title}
           </h3>
