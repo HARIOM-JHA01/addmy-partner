@@ -167,17 +167,17 @@ const UserDetailPage = () => {
                 />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-gray-800">
-              Profile Information
+            <h2 className="text-xl font-bold text-gray-800">
+              Addmy Profile Information
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="bg-linear-to-br from-blue-50 to-cyan-50 p-5 rounded-xl border border-blue-100">
               <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                Username
+                Addmy Username
               </label>
               <p className="text-xl font-bold text-gray-900">
-                @{user.user.username}
+                {user.user.username}
               </p>
             </div>
             <div className="bg-linear-to-br from-purple-50 to-pink-50 p-5 rounded-xl border border-purple-100">
@@ -202,14 +202,6 @@ const UserDetailPage = () => {
               </label>
               <p className="text-xl font-bold text-gray-900">
                 {user.user.tgid}
-              </p>
-            </div>
-            <div className="bg-linear-to-br from-amber-50 to-orange-50 p-5 rounded-xl border border-amber-100">
-              <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                Email
-              </label>
-              <p className="text-xl font-bold text-gray-900">
-                {user.user.email || "Not provided"}
               </p>
             </div>
             <div className="bg-linear-to-br from-rose-50 to-pink-50 p-5 rounded-xl border border-rose-100">

@@ -138,10 +138,13 @@ const UsersListPage = () => {
                   <thead className="bg-linear-to-r from-blue-500 to-purple-500">
                     <tr>
                       <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                        Username
+                        TG Username
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                        Name
+                        Addmy Username
+                      </th>
+                      <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
+                        Membership Type
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                         Join Date
@@ -181,6 +184,9 @@ const UsersListPage = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           {user.name}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          Premium
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
                           {format(new Date(user.joinDate), "MMM dd, yyyy")}
