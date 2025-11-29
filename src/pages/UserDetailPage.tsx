@@ -249,8 +249,8 @@ const UserDetailPage = () => {
                   )}
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">
-                Membership Status
+              <h2 className="text-xl font-bold text-gray-800">
+                Premium Membership Status
               </h2>
             </div>
             {!user.isExpired && (

@@ -54,6 +54,7 @@ export interface PartnerUser {
   name: string;
   tgid: string;
   joinDate: string;
+  membershipType: string;
   membershipExpiryDate: string;
   isExpired: boolean;
   daysUntilExpiry: number;

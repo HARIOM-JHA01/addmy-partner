@@ -178,15 +178,15 @@ const UsersListPage = () => {
                               </span>
                             </div>
                             <span className="text-sm font-semibold text-gray-900">
-                              @{user.username}
+                              {user.tgid}
                             </span>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          {user.name}
+                          {user.username}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                          Premium
+                          {user.membershipType || "free"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
                           {format(new Date(user.joinDate), "MMM dd, yyyy")}
