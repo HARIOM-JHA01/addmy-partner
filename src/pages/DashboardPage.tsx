@@ -38,10 +38,10 @@ const DashboardPage = () => {
   };
 
   const copyReferralMessage = () => {
-    const message = `Join addmyco!! for creating your Namecard : @AddmyCo_bot 
-Do Remember to user my referal code : ${
+    const message = `Join addmyco!! for creating your Namecard : https://t.me/AddmyCo_bot
+Do Remember to user my referal code while signing up : ${
       stats?.referral.referralCode ?? ""
-    } while signing up 
+    }  
 So that you can get premium membership at discounted Price evertime`;
     navigator.clipboard.writeText(message);
     alert("Referral message copied to clipboard!");
