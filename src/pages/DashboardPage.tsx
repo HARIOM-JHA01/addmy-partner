@@ -37,14 +37,14 @@ const DashboardPage = () => {
     }
   };
 
-  const copyReferralUrl = () => {
-    const url = `https://partner.addmy.co/t.me/ref-${
+  const copyReferralMessage = () => {
+    const message = `Join addmyco!! for creating your Namecard : @AddmyCo_bot 
+Do Remember to user my referal code : ${
       stats?.referral.referralCode ?? ""
-    }`;
-    if (url) {
-      navigator.clipboard.writeText(url);
-      alert("Referral URL copied to clipboard!");
-    }
+    } while signing up 
+So that you can get premium membership at discounted Price evertime`;
+    navigator.clipboard.writeText(message);
+    alert("Referral message copied to clipboard!");
   };
 
   if (loading)
@@ -113,32 +113,25 @@ const DashboardPage = () => {
                 {stats.referral.referralCode}
               </span>
             </div>
-            <div className="flex items-center space-x-3">
-              <input
-                type="text"
-                value={`https://partner.addmy.co/t.me/ref-${stats.referral.referralCode}`}
-                readOnly
-                className="flex-1 px-4 py-3 border-2 border-purple-200 rounded-xl bg-white focus:border-purple-400 focus:ring-2 focus:ring-purple-200 transition-all duration-200 font-mono text-sm"
-              />
-              <button
-                onClick={copyReferralUrl}
-                className="px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center space-x-2"
+            <button
+              onClick={copyReferralMessage}
+              className="w-full px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center space-x-2"
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                  />
-                </svg>
-              </button>
-            </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                />
+              </svg>
+              <span>Copy Referral Message</span>
+            </button>
             <div className="flex justify-between items-center">
               <span className="text-gray-700 font-medium">Status</span>
               <span
