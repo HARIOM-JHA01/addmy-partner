@@ -13,6 +13,7 @@ const PaymentHistoryPage = () => {
     totalPages: 1,
     totalRecords: 0,
     limit: 20,
+    deletedUsers: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
