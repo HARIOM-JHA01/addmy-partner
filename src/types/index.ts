@@ -55,7 +55,7 @@ export interface PartnerUser {
   tgid: string;
   joinDate: string;
   membershipType: string;
-  membershipExpiryDate: string;
+  membershipExpiryDate?: string;
   isExpired: boolean;
   daysUntilExpiry: number;
   renewalCount: number;
@@ -119,6 +119,7 @@ export interface DashboardStats {
 }
 
 export interface PaginationInfo {
+  deletedUsers: number;
   currentPage: number;
   totalPages: number;
   totalRecords: number;

@@ -25,7 +25,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-gray-500 bg-opacity-75"
+        className="absolute inset-0 bg-gray-500 bg-opacity-50 backdrop-blur-sm"
         onClick={onClose}
       />
 

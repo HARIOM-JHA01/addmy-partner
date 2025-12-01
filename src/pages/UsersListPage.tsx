@@ -14,6 +14,7 @@ const UsersListPage = () => {
     totalPages: 1,
     totalRecords: 0,
     limit: 20,
+    deletedUsers: 0,
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -77,12 +78,15 @@ const UsersListPage = () => {
                 My Users
               </h1>
               <p className="text-gray-600 mt-1">
-                Total:{" "}
+                Active Users:{" "}
                 <span className="font-semibold text-blue-600">
                   {pagination.totalRecords}
-                </span>{" "}
-                users
+                </span>
               </p>
+              User Deleted:{" "}
+              <span className="font-semibold text-red-600">
+                {pagination.deletedUsers}
+              </span>
             </div>
           </div>
         </div>
@@ -153,7 +157,7 @@ const UsersListPage = () => {
                         Expiry Date
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
-                        Status
+                        Premium Membership Status
                       </th>
                       <th className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider">
                         Renewals
@@ -172,11 +176,6 @@ const UsersListPage = () => {
                       >
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center space-x-2">
-                            <div className="w-8 h-8 bg-linear-to-br from-blue-400 to-cyan-400 rounded-full flex items-center justify-center">
-                              <span className="text-white text-xs font-bold">
-                                {user.username.charAt(0).toUpperCase()}
-                              </span>
-                            </div>
                             <span className="text-sm font-semibold text-gray-900">
                               {user.tgid}
                             </span>
@@ -192,10 +191,12 @@ const UsersListPage = () => {
                           {format(new Date(user.joinDate), "MMM dd, yyyy")}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium">
-                          {format(
-                            new Date(user.membershipExpiryDate),
-                            "MMM dd, yyyy"
-                          )}
+                          {user.membershipExpiryDate
+                            ? format(
+                                new Date(user.membershipExpiryDate),
+                                "MMM dd, yyyy"
+                              )
+                            : "N/A"}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm">
                           {user.isExpired ? (

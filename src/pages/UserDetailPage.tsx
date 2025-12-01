@@ -5,12 +5,14 @@ import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
 import Modal from "../components/Modal";
 import api from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import type { UserDetail, RenewalPrice } from "../types";
 import { format } from "date-fns";
 
 const UserDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { partner } = useAuth();
   const [user, setUser] = useState<UserDetail | null>(null);
   const [renewalPrices, setRenewalPrices] = useState<RenewalPrice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,11 +20,15 @@ const UserDetailPage = () => {
   const [renewalModal, setRenewalModal] = useState(false);
   const [selectedMonths, setSelectedMonths] = useState<number>(0);
   const [renewing, setRenewing] = useState(false);
+  const [credits, setCredits] = useState({ availableRenewalCredits: 0 });
+
+  console.log("Credits:", credits.availableRenewalCredits);
 
   useEffect(() => {
     if (id) {
       fetchUserDetail();
       fetchRenewalPrices();
+      fetchCredits();
     }
   }, [id]);
 
@@ -42,7 +48,7 @@ const UserDetailPage = () => {
 
   const fetchRenewalPrices = async () => {
     try {
-      const response = await api.get("/renewal-prices");
+      const response = await api.get("/partner/renewal-prices");
       if (response.data.success) {
         setRenewalPrices(
           response.data.data.filter((rp: RenewalPrice) => rp.status === 1)
@@ -53,9 +59,23 @@ const UserDetailPage = () => {
     }
   };
 
+  const fetchCredits = async () => {
+    if (!partner?.referralCode) return;
+    try {
+      const response = await api.get(
+        `/partner/credits?code=${partner.referralCode}`
+      );
+      if (response.data.success) {
+        setCredits(response.data.data);
+      }
+    } catch (err: any) {
+      console.error("Failed to fetch credits", err);
+    }
+  };
+
   const handleRenewalClick = () => {
     setRenewalModal(true);
-    setSelectedMonths(0);
+    setSelectedMonths(12);
   };
 
   const handleRenewMembership = async () => {
@@ -63,7 +83,7 @@ const UserDetailPage = () => {
 
     try {
       setRenewing(true);
-      const response = await api.post("/renew-membership", {
+      const response = await api.post("/partner/renew-membership", {
         partnerUserId: user.id,
         months: selectedMonths,
       });
@@ -72,6 +92,11 @@ const UserDetailPage = () => {
         alert(response.data.message);
         setRenewalModal(false);
         fetchUserDetail();
+        // Update credits
+        setCredits((prev) => ({
+          ...prev,
+          availableRenewalCredits: prev.availableRenewalCredits - 1,
+        }));
       }
     } catch (err: any) {
       const errorMsg =
@@ -114,7 +139,7 @@ const UserDetailPage = () => {
       <div className="max-w-5xl mx-auto space-y-8 animate-fadeIn">
         <div className="flex items-center justify-between animate-slideDown">
           <div className="flex items-center space-x-4">
-            <div className="w-14 h-14 bg-linear-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+            {/* <div className="w-14 h-14 bg-linear-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
               <svg
                 className="w-8 h-8 text-white"
                 fill="currentColor"
@@ -126,9 +151,9 @@ const UserDetailPage = () => {
                   clipRule="evenodd"
                 />
               </svg>
-            </div>
+            </div> */}
             <div>
-              <h1 className="text-4xl font-bold bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 User Details
               </h1>
               <p className="text-gray-600 mt-1">
@@ -140,7 +165,7 @@ const UserDetailPage = () => {
             onClick={() => navigate("/partner/users")}
             className="px-6 py-3 text-purple-700 font-semibold border-2 border-purple-300 rounded-xl hover:bg-purple-50 transition-all duration-200 hover:scale-105 flex items-center space-x-2"
           >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="w-5 h-4" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"
                 d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
@@ -167,7 +192,7 @@ const UserDetailPage = () => {
                 />
               </svg>
             </div>
-            <h2 className="text-xl font-bold text-gray-800">
+            <h2 className="text-md font-bold text-gray-800">
               Addmy Profile Information
             </h2>
           </div>
@@ -185,7 +210,7 @@ const UserDetailPage = () => {
                 Name (English)
               </label>
               <p className="text-xl font-bold text-gray-900">
-                {user.user.nameEnglish}
+                {user.user.nameEnglish || "Not provided"}
               </p>
             </div>
             <div className="bg-linear-to-br from-green-50 to-emerald-50 p-5 rounded-xl border border-green-100">
@@ -193,7 +218,7 @@ const UserDetailPage = () => {
                 Name (Chinese)
               </label>
               <p className="text-xl font-bold text-gray-900">
-                {user.user.nameChinese}
+                {user.user.nameChinese || "Not provided"}
               </p>
             </div>
             <div className="bg-linear-to-br from-indigo-50 to-purple-50 p-5 rounded-xl border border-indigo-100">
@@ -201,7 +226,7 @@ const UserDetailPage = () => {
                 Telegram ID
               </label>
               <p className="text-xl font-bold text-gray-900">
-                {user.user.tgid}
+                {user.user.tgid || "N/A"}
               </p>
             </div>
             <div className="bg-linear-to-br from-rose-50 to-pink-50 p-5 rounded-xl border border-rose-100">
@@ -222,7 +247,7 @@ const UserDetailPage = () => {
         >
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center space-x-3">
-              <div
+              {/* <div
                 className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                   user.isExpired
                     ? "bg-linear-to-br from-red-400 to-pink-500"
@@ -248,8 +273,8 @@ const UserDetailPage = () => {
                     />
                   )}
                 </svg>
-              </div>
-              <h2 className="text-xl font-bold text-gray-800">
+              </div> */}
+              <h2 className="text-md font-bold text-gray-800">
                 Premium Membership Status
               </h2>
             </div>
@@ -301,7 +326,9 @@ const UserDetailPage = () => {
                 Expiry Date
               </label>
               <p className="text-xl font-bold text-gray-900">
-                {format(new Date(user.membershipExpiryDate), "MMM dd, yyyy")}
+                {user.membershipExpiryDate
+                  ? format(new Date(user.membershipExpiryDate), "MMM dd, yyyy")
+                  : "N/A"}
               </p>
             </div>
             <div
@@ -314,7 +341,7 @@ const UserDetailPage = () => {
               }`}
             >
               <label className="block text-sm font-semibold text-gray-600 uppercase tracking-wide mb-2">
-                Days Until Expiry
+                P.Membership Exp. In
               </label>
               <p
                 className={`text-3xl font-bold ${
@@ -365,9 +392,16 @@ const UserDetailPage = () => {
           <div className="mt-6">
             <button
               onClick={handleRenewalClick}
-              className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium"
+              disabled={
+                !credits.availableRenewalCredits ||
+                credits.availableRenewalCredits < 1
+              }
+              className="w-full md:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-medium"
             >
-              Renew Membership
+              {!credits.availableRenewalCredits ||
+              credits.availableRenewalCredits < 1
+                ? "Insufficient Credits to Renew"
+                : "Renew Membership"}
             </button>
           </div>
         </div>
@@ -382,48 +416,45 @@ const UserDetailPage = () => {
         <div className="space-y-4">
           <div className="bg-gray-50 p-4 rounded-lg">
             <h4 className="font-semibold text-gray-900 mb-2">
-              User: @{user.user.username}
+              User: {user.user.username}
             </h4>
             <p className="text-sm text-gray-600">
-              Current Expiry:{" "}
-              {format(new Date(user.membershipExpiryDate), "MMM dd, yyyy")}
+              {user.membershipExpiryDate &&
+                `Current Expiry: ${format(
+                  new Date(user.membershipExpiryDate),
+                  "MMM dd, yyyy"
+                )}`}
             </p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Select Renewal Period *
+              Renewal Period
             </label>
-            <select
-              value={selectedMonths}
-              onChange={(e) => setSelectedMonths(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value={0}>-- Select months --</option>
-              {renewalPrices.map((rp) => (
-                <option key={rp._id} value={rp.membershipMonths}>
-                  {rp.membershipMonths} month
-                  {rp.membershipMonths > 1 ? "s" : ""} - {rp.creditCost} credit
-                  {rp.creditCost > 1 ? "s" : ""}
-                </option>
-              ))}
-            </select>
+            <div className="flex items-center space-x-2">
+              <input
+                type="radio"
+                id="renewal-1year"
+                value={12}
+                checked={selectedMonths === 12}
+                onChange={() => setSelectedMonths(12)}
+                className="w-4 h-4 text-blue-600 focus:ring-blue-500"
+              />
+              <label htmlFor="renewal-1year" className="text-sm text-gray-700">
+                1 Year - 1 credit
+              </label>
+            </div>
           </div>
 
           {selectedMonths > 0 && getSelectedPrice() && (
             <div className="bg-blue-50 p-4 rounded-lg">
               <div className="flex justify-between text-sm mb-1">
                 <span className="text-gray-700">Renewal Period:</span>
-                <span className="font-medium">
-                  {selectedMonths} month{selectedMonths > 1 ? "s" : ""}
-                </span>
+                <span className="font-medium">1 Year</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-700">Credit Cost:</span>
-                <span className="font-bold text-blue-600">
-                  {getSelectedPrice()?.creditCost} credit
-                  {(getSelectedPrice()?.creditCost || 0) > 1 ? "s" : ""}
-                </span>
+                <span className="font-bold text-blue-600">1 credit</span>
               </div>
             </div>
           )}

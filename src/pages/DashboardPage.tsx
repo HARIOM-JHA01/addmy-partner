@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ErrorMessage from "../components/ErrorMessage";
+import Modal from "../components/Modal";
 import api from "../services/api";
 import type { DashboardStats } from "../types";
 import WebApp from "@twa-dev/sdk";
@@ -14,6 +15,7 @@ const DashboardPage = () => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [shareModal, setShareModal] = useState(false);
   const [user, setUser] = useState<
     typeof WebApp.initDataUnsafe.user | null | undefined
   >(null);
@@ -38,13 +40,74 @@ const DashboardPage = () => {
   };
 
   const copyReferralMessage = () => {
-    const message = `Join addmyco!! for creating your Namecard : https://t.me/AddmyCo_bot
-Do Remember to user my referal code while signing up : ${
+    navigator.clipboard.writeText(stats?.referral.referralCode ?? "");
+    alert("Referral code copied to clipboard!");
+  };
+
+  const shareReferralMessage = () => {
+    setShareModal(true);
+  };
+
+  const shareToPlatform = (platform: string) => {
+    let message = `Join addmyco!! for creating your Namecard : https://t.me/AddmyCo_bot
+Do Remember to use my referral code while signing up : ${
       stats?.referral.referralCode ?? ""
     }  
-So that you can get premium membership at discounted Price evertime`;
-    navigator.clipboard.writeText(message);
-    alert("Referral message copied to clipboard!");
+So that you can get premium membership at discounted Price evertime.\n copy referral code ${
+      stats?.referral.referralCode ?? ""
+    }`;
+
+    if (platform === "whatsapp") {
+      message = `Join addmyco!! for creating your Namecard : https://t.me/AddmyCo_bot
+Do Remember to use my referral code while signing up : *${
+        stats?.referral.referralCode ?? ""
+      }*
+So that you can get premium membership at discounted Price evertime.\n copy referral code ${
+        stats?.referral.referralCode ?? ""
+      }`;
+    }
+
+    let url = "";
+    switch (platform) {
+      case "telegram":
+        url = `https://t.me/share/url?url=${encodeURIComponent(message)}`;
+        break;
+      case "whatsapp":
+        url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+        break;
+      case "wechat":
+        // WeChat doesn't have a direct share URL, perhaps copy
+        navigator.clipboard.writeText(message);
+        alert("Message copied for WeChat!");
+        return;
+      case "instagram":
+        // Instagram doesn't support direct text sharing, copy
+        navigator.clipboard.writeText(message);
+        alert("Message copied for Instagram!");
+        return;
+      case "facebook":
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          "https://t.me/AddmyCo_bot"
+        )}&quote=${encodeURIComponent(message)}`;
+        break;
+      case "line":
+        url = `https://line.me/R/msg/text/?${encodeURIComponent(message)}`;
+        break;
+      case "linkedin":
+        url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+          "https://t.me/AddmyCo_bot"
+        )}`;
+        break;
+      case "x":
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+          message
+        )}`;
+        break;
+      default:
+        return;
+    }
+    window.open(url, "_blank");
+    setShareModal(false);
   };
 
   if (loading)
@@ -113,25 +176,46 @@ So that you can get premium membership at discounted Price evertime`;
                 {stats.referral.referralCode}
               </span>
             </div>
-            <button
-              onClick={copyReferralMessage}
-              className="w-full px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center space-x-2"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div className="flex space-x-4">
+              <button
+                onClick={copyReferralMessage}
+                className="flex-1 px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center space-x-2"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                />
-              </svg>
-              <span>Copy Referral Message</span>
-            </button>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                  />
+                </svg>
+                <span>Copy</span>
+              </button>
+              <button
+                onClick={shareReferralMessage}
+                className="flex-1 px-6 py-3 bg-linear-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center space-x-2"
+              >
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"
+                  />
+                </svg>
+                <span>Share</span>
+              </button>
+            </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-700 font-medium">Status</span>
               <span
@@ -260,7 +344,7 @@ So that you can get premium membership at discounted Price evertime`;
           >
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wide">
-                Active Users
+                Active Membership
               </h3>
               <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
                 <svg
@@ -436,6 +520,64 @@ So that you can get premium membership at discounted Price evertime`;
           </div>
         </div>
       </div>
+
+      {/* Share Modal */}
+      <Modal
+        isOpen={shareModal}
+        onClose={() => setShareModal(false)}
+        title="Share Referral Message"
+      >
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            onClick={() => shareToPlatform("telegram")}
+            className="flex items-center space-x-2 p-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            <span>Telegram</span>
+          </button>
+          <button
+            onClick={() => shareToPlatform("whatsapp")}
+            className="flex items-center space-x-2 p-3 bg-green-500 text-white rounded-lg hover:bg-green-600"
+          >
+            <span>WhatsApp</span>
+          </button>
+          <button
+            onClick={() => shareToPlatform("wechat")}
+            className="flex items-center space-x-2 p-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            <span>WeChat</span>
+          </button>
+          <button
+            onClick={() => shareToPlatform("instagram")}
+            className="flex items-center space-x-2 p-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600"
+          >
+            <span>Instagram</span>
+          </button>
+          <button
+            onClick={() => shareToPlatform("facebook")}
+            className="flex items-center space-x-2 p-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            <span>Facebook</span>
+          </button>
+          <button
+            onClick={() => shareToPlatform("line")}
+            className="flex items-center space-x-2 p-3 bg-green-400 text-white rounded-lg hover:bg-green-500"
+          >
+            <span>Line</span>
+          </button>
+          <button
+            onClick={() => shareToPlatform("linkedin")}
+            className="flex items-center space-x-2 p-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800"
+          >
+            <span>LinkedIn</span>
+          </button>
+          <button
+            onClick={() => shareToPlatform("x")}
+            className="flex items-center space-x-2 p-3 bg-black text-white rounded-lg hover:bg-gray-800"
+          >
+            <span>X</span>
+          </button>
+        </div>
+      </Modal>
     </Layout>
   );
 };
