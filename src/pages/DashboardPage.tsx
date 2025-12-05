@@ -40,7 +40,13 @@ const DashboardPage = () => {
   };
 
   const copyReferralMessage = () => {
-    navigator.clipboard.writeText(stats?.referral.referralUrl ?? "");
+    const originalUrl = stats?.referral.referralUrl ?? "";
+    // Add "ref-" prefix after "t.me/"
+    const modifiedUrl = originalUrl.replace(
+      /\/t\.me\/([^\/]*)/,
+      "/t.me/ref-$1"
+    );
+    navigator.clipboard.writeText(modifiedUrl);
     alert("Partner link copied to clipboard!");
   };
 
@@ -49,22 +55,20 @@ const DashboardPage = () => {
   };
 
   const shareToPlatform = (platform: string) => {
-    let message = `Join addmyco!! for creating your Namecard : https://t.me/AddmyCo_bot
-Do Remember to use my referral code while signing up : ${
-      stats?.referral.referralCode ?? ""
-    }  
-So that you can get premium membership at discounted Price evertime.\n copy referral code ${
-      stats?.referral.referralCode ?? ""
-    }`;
+    const referralUrl = (stats?.referral.referralUrl ?? "").replace(
+      /\/t\.me\/([^\/]*)/,
+      "/t.me/ref-$1"
+    );
+    let message = `Join addmyco!! for creating your Namecard !!
+Sign up with my referel url So that you can get premium membership at discounted Price evertime.
+
+${referralUrl}`;
 
     if (platform === "whatsapp") {
-      message = `Join addmyco!! for creating your Namecard : https://t.me/AddmyCo_bot
-Do Remember to use my referral code while signing up : *${
-        stats?.referral.referralCode ?? ""
-      }*
-So that you can get premium membership at discounted Price evertime.\n copy referral code ${
-        stats?.referral.referralCode ?? ""
-      }`;
+      message = `Join addmyco!! for creating your Namecard !!
+Sign up with my referel url So that you can get premium membership at discounted Price evertime.
+
+${referralUrl}`;
     }
 
     let url = "";
@@ -176,9 +180,12 @@ So that you can get premium membership at discounted Price evertime.\n copy refe
                 href={stats.referral.referralUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xl font-mono font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:underline cursor-pointer"
+                title={stats.referral.referralUrl}
+                className="text-lg font-mono font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:underline cursor-pointer truncate max-w-xs"
               >
-                {stats.referral.referralUrl}
+                {stats.referral.referralUrl.length > 30
+                  ? `${stats.referral.referralUrl.substring(0, 27)}...`
+                  : stats.referral.referralUrl}
               </a>
             </div>
             <div className="flex space-x-4">
