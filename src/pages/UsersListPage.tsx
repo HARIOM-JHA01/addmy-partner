@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../components/Layout";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -19,10 +19,25 @@ const UsersListPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isSearching, setIsSearching] = useState(false);
+  const searchTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    fetchUsers(1, statusFilter);
+    if (searchQuery.trim()) {
+      searchUsers(searchQuery);
+    } else {
+      fetchUsers(1, statusFilter);
+    }
   }, [statusFilter]);
+
+  useEffect(() => {
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const fetchUsers = async (page: number, status: string) => {
     try {
@@ -42,8 +57,55 @@ const UsersListPage = () => {
     }
   };
 
+  const searchUsers = async (query: string) => {
+    if (!query.trim()) {
+      // If search query is empty, fetch all users
+      fetchUsers(1, statusFilter);
+      return;
+    }
+
+    try {
+      setIsSearching(true);
+      setLoading(true);
+      const response = await api.get(
+        `partner/search-user?query=${encodeURIComponent(query)}`
+      );
+      if (response.data.success) {
+        setUsers(response.data.data.users || []);
+        setPagination({
+          currentPage: 1,
+          totalPages: 1,
+          totalRecords: response.data.data.users?.length || 0,
+          limit: 20,
+          deletedUsers: 0,
+        });
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Failed to search users");
+    } finally {
+      setLoading(false);
+      setIsSearching(false);
+    }
+  };
+
   const handleFilterChange = (status: string) => {
     setStatusFilter(status);
+    setSearchQuery(""); // Clear search when filter changes
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+
+    // Clear previous timeout
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    // Set new timeout for debounced search
+    searchTimeoutRef.current = setTimeout(() => {
+      searchUsers(query);
+    }, 300);
   };
 
   if (loading && users.length === 0)
@@ -88,6 +150,69 @@ const UsersListPage = () => {
                 {pagination.deletedUsers}
               </span>
             </div>
+          </div>
+        </div>
+
+        {/* Search Bar */}
+        <div className="bg-white bg-opacity-70 backdrop-blur-lg p-6 rounded-2xl shadow-lg border border-white border-opacity-50 animate-slideUp">
+          <label className="block text-sm font-bold text-gray-700 mb-3 items-center space-x-2">
+            <svg
+              className="w-5 h-5 text-blue-600"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fillRule="evenodd"
+                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <span>Search Users</span>
+          </label>
+          <div className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search by username, TG ID, or email..."
+              className="w-full px-4 py-3 pl-12 border-2 border-blue-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white font-medium"
+            />
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg
+                className="w-5 h-5 text-blue-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            {isSearching && (
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <svg
+                  className="w-5 h-5 text-blue-400 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+              </div>
+            )}
           </div>
         </div>
 
