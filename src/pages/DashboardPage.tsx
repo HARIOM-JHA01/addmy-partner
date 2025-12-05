@@ -40,8 +40,8 @@ const DashboardPage = () => {
   };
 
   const copyReferralMessage = () => {
-    navigator.clipboard.writeText(stats?.referral.referralCode ?? "");
-    alert("Referral code copied to clipboard!");
+    navigator.clipboard.writeText(stats?.referral.referralUrl ?? "");
+    alert("Partner link copied to clipboard!");
   };
 
   const shareReferralMessage = () => {
@@ -171,10 +171,15 @@ So that you can get premium membership at discounted Price evertime.\n copy refe
           </div>
           <div className="space-y-5">
             <div className="flex justify-between items-center bg-linear-to-r from-blue-50 to-purple-50 p-4 rounded-xl">
-              <span className="text-gray-700 font-medium">Referral Code</span>
-              <span className="text-xl font-mono font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                {stats.referral.referralCode}
-              </span>
+              <span className="text-gray-700 font-medium">Partner Link</span>
+              <a
+                href={stats.referral.referralUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xl font-mono font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent hover:underline cursor-pointer"
+              >
+                {stats.referral.referralUrl}
+              </a>
             </div>
             <div className="flex space-x-4">
               <button
