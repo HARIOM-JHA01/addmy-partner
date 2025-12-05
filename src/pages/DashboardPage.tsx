@@ -60,13 +60,13 @@ const DashboardPage = () => {
       "/t.me/ref-$1"
     );
     let message = `Join addmyco!! for creating your Namecard !!
-Sign up with my referel url So that you can get premium membership at discounted Price evertime.
+Sign up with my referral url So that you can get premium membership at discounted Price evertime.
 
 ${referralUrl}`;
 
     if (platform === "whatsapp") {
       message = `Join addmyco!! for creating your Namecard !!
-Sign up with my referel url So that you can get premium membership at discounted Price evertime.
+Sign up with my referral url So that you can get premium membership at discounted Price evertime.
 
 ${referralUrl}`;
     }
