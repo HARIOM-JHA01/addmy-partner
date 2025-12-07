@@ -54,9 +54,11 @@ const WelcomePage = () => {
               <div className="flex items-center justify-between mb-3">
                 <div>
                   <div className="text-sm text-gray-500">
-                    Available User Credits: 0
+                    Available Premium Credits: 0
                   </div>
-                  <div className="text-xl font-semibold">Buy User Credits</div>
+                  <div className="text-xl font-semibold">
+                    Buy Premium Credits
+                  </div>
                 </div>
                 <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-blue-700 rounded-lg flex items-center justify-center text-white">
                   <svg
@@ -76,7 +78,7 @@ const WelcomePage = () => {
                   to="/partner/packages?type=USER_CREDITS"
                   className="w-full py-2 bg-blue-600 text-white text-center rounded-lg font-semibold shadow-md"
                 >
-                  Buy User Credits
+                  Buy Premium Credits
                 </Link>
                 {/* <Link
                   to="/partner/packages"

@@ -147,8 +147,8 @@ referral url : ${referralUrl}`;
             role="alert"
           >
             <span className="block sm:inline">
-              You do not have any user credits therefor your referral link has
-              been disabled till renew.
+              You do not have any premium credits therefor your referral link
+              has been disabled till renew.
             </span>
           </div>
         )}
@@ -247,7 +247,7 @@ referral url : ${referralUrl}`;
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-stagger-container">
           <div className="bg-linear-to-br from-blue-500 to-blue-700 p-8 rounded-2xl shadow-2xl text-white transform transition-all duration-300 hover:scale-105 hover:shadow-3xl animate-slideUp">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold">User Credits</h3>
+              <h3 className="text-xl font-bold">Premium Credits</h3>
               <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <img src={userIcon} alt="User Icon" className="rounded-full" />
               </div>

@@ -188,7 +188,7 @@ const PackagesPage = () => {
                     : "bg-gray-50 text-gray-700"
                 }`}
               >
-                User Credits
+                Premium Credits
               </button>
               <button
                 onClick={() => {
@@ -244,7 +244,7 @@ const PackagesPage = () => {
                           </svg>
                           <span>
                             {pkg.type === "USER_CREDITS"
-                              ? "User Credits"
+                              ? "Premium Credits"
                               : "Renewal Credits"}
                           </span>
                         </span>
@@ -406,7 +406,7 @@ const PackagesPage = () => {
                 >
                   {" "}
                   {selectedPackage.type === "USER_CREDITS"
-                    ? "User Credits"
+                    ? "Premium Credits"
                     : "Renewal Credits"}
                 </span>
               </div>

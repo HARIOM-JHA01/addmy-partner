@@ -271,7 +271,7 @@ So that you can get premium membership at discounted Price evertime`;
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-linear-to-br from-blue-500 to-blue-700 p-6 rounded-xl shadow-lg text-white">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold">User Credits</h3>
+                <h3 className="text-lg font-bold">Premium Credits</h3>
                 <div className="w-10 h-10  bg-opacity-20 rounded-lg flex items-center justify-center">
                   <img
                     src={userIcon}
